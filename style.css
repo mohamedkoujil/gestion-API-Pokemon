@@ -1,0 +1,22 @@
+.flex {
+    display: flex;
+}
+
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.center {
+    justify-content: center;
+    align-items: center;
+}
+
+.pokemonCard {
+    width: 200px;
+    background-color: rgb(245, 208, 0);
+    border: rgb(88, 88, 204) 5px solid;
+    border-radius: 10px;
+}
+
+

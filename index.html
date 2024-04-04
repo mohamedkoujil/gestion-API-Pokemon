@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Primera página con Vue</title>
+</head>
+
+<body>
+    <main>
+        <div id="app">
+            Busqueda
+            <form v-on:submit.prevent="verPokemon">
+                <input id="inputUsr" v-model="pokemon" type="text">
+                <input type="submit" value="imprimir">
+            </form>
+
+            <div class="pokemonCard flexColumn" v-if="ok" id="datos">
+                <h2>{{ pokemonData.name }}</h2>
+                <div v-for="type in pokemonData.types">
+                    <p>{{ type.type.name }}</p>
+                </div>
+                <div v-for="ability in pokemonData.abilities">
+                    <p>{{ ability.ability.name }}</p>
+                </div>
+                <div v-for="stat in pokemonData.stats">
+                    <p>{{ stat.stat.name }}: {{ stat.base_stat }}</p>
+                </div>
+                <img v-if="showImg" :src="pokemonData.sprites.front_default">
+            </div>
+            <div v-else>No se ha encontrado el pokemon</div>
+
+        </div> 
+    </main>
+
+    <script>
+        const apiLink = 'https://pokeapi.co/api/v2/pokemon/'
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                    pokemon: '',
+                    ok: true,
+                    pokemonData: {},
+                    img: '',
+                    showImg: false,
+                };
+            },
+            
+            methods: {
+                verPokemon() {
+                    this.conectaApi(this.pokemon);
+                },
+
+                conectaApi(pokemon) {
+                    fetch(apiLink + pokemon)
+                        .then((res) => {
+                            if (res.ok) {
+                                return res.json();
+                            } else {
+                                this.ok = false;
+                                throw new Error('Error en la llamada a la API');
+                            }
+                        })
+                        .then((js) => {
+                            console.log(js);
+                            this.pokemonData = js;
+                            this.showImg = true;
+                            this.ok = true;
+                        })
+                }
+            },
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+</html>
