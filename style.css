@@ -27,10 +27,10 @@
 }
 
 .pokemonCard {
-    width: fit-content;
+    min-width: 8em;
+    max-width: 8em;
+    max-height: 9em;
     background-color: rgb(245, 208, 0);
     border: rgb(88, 88, 204) 5px solid;
     border-radius: 10px;
 }
-
-
