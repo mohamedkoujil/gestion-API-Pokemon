@@ -2,9 +2,23 @@
     display: flex;
 }
 
+.verdanaFont {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.margin025 {
+    margin: 0.25em;
+}
+
 .flexColumn {
     display: flex;
     flex-direction: column;
+}
+
+.title {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-bottom: 0.75em;
 }
 
 .center {
@@ -13,7 +27,7 @@
 }
 
 .pokemonCard {
-    width: 200px;
+    width: fit-content;
     background-color: rgb(245, 208, 0);
     border: rgb(88, 88, 204) 5px solid;
     border-radius: 10px;

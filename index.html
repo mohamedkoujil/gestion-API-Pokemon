@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -14,23 +15,47 @@
                 <input id="inputUsr" v-model="pokemon" type="text">
                 <input type="submit" value="imprimir">
             </form>
-
-            <div class="pokemonCard flexColumn" v-if="ok" id="datos">
-                <h2>{{ pokemonData.name }}</h2>
-                <div v-for="type in pokemonData.types">
-                    <p>{{ type.type.name }}</p>
+            <div class="pokemonCard flexColumn center verdanaFont" v-show="ok" id="datos">
+                <button @click="addFav">+</button>
+                <img class="margin025" :src="pokemonData?.sprites?.front_default">
+                <div class="title">{{ pokemonData.name }}</div class="title">
+                <div v-show = "masInfo">
+                    <div v-for="type in pokemonData.types">
+                        <div class="margin025">{{ type.type.name }}</div>
+                    </div>
+                    <div v-for="ability in pokemonData.abilities">
+                        <div class="margin025">{{ ability.ability.name }}</div>
+                    </div>
+                    <div v-for="stat in pokemonData.stats">
+                        <div class="margin025">{{ stat.stat.name }}: {{ stat.base_stat }}</div>
+                    </div>
                 </div>
-                <div v-for="ability in pokemonData.abilities">
-                    <p>{{ ability.ability.name }}</p>
-                </div>
-                <div v-for="stat in pokemonData.stats">
-                    <p>{{ stat.stat.name }}: {{ stat.base_stat }}</p>
-                </div>
-                <img v-if="showImg" :src="pokemonData.sprites.front_default">
+                
             </div>
-            <div v-else>No se ha encontrado el pokemon</div>
+            <div v-if="pokemonNoEncontrado">No se ha encontrado el pokemon</div>
 
-        </div> 
+            <div class="flex">
+                <div v-for="fav in favoritos" :key="fav">
+                    <div class="pokemonCard flexColumn center verdanaFont" @mouseenter="mostrarMasInfo" @mouseleave="mostrarMasInfo">
+                        <img :src="fav.sprites.front_default">
+                        <div class="title">{{ fav.name }}</div class="title">
+                        <div v-show="masInfo" >
+                            <div v-for="type in fav.types">
+                                <div class="margin025">{{ type.type.name }}</div>
+                            </div>
+                            <div v-for="ability in fav.abilities">
+                                <div class="margin025">{{ ability.ability.name }}</div>
+                            </div>
+                            <div v-for="stat in fav.stats">
+                                <div class="margin025">{{ stat.stat.name }}: {{ stat.base_stat }}</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </main>
 
     <script>
@@ -40,13 +65,15 @@
             data() {
                 return {
                     pokemon: '',
-                    ok: true,
+                    ok: false,
                     pokemonData: {},
-                    img: '',
                     showImg: false,
+                    pokemonNoEncontrado: false,
+                    favoritos: [],
+                    masInfo: false
                 };
             },
-            
+
             methods: {
                 verPokemon() {
                     this.conectaApi(this.pokemon);
@@ -59,20 +86,48 @@
                                 return res.json();
                             } else {
                                 this.ok = false;
+                                this.pokemonNoEncontrado = true;
                                 throw new Error('Error en la llamada a la API');
                             }
                         })
                         .then((js) => {
-                            console.log(js);
                             this.pokemonData = js;
                             this.showImg = true;
                             this.ok = true;
+                            this.pokemonNoEncontrado = false;
                         })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                        });
+                },
+
+                mostrarMasInfo() {
+                    console.log('hola');
+                    this.masInfo = !this.masInfo;
+                },
+
+                addFav() {
+                    const pokemonName = this.pokemonData.name;
+                    if (!this.favoritos.some(fav => fav.name === pokemonName)) {
+                        this.favoritos.push(this.pokemonData);
+                        localStorage.setItem('favorites', JSON.stringify(this.favoritos));
+                    }
+                },
+
+                loadFavorites() {
+                    const favorites = localStorage.getItem('favorites');
+                    if (favorites) {
+                        this.favoritos = JSON.parse(favorites);
+                    }
                 }
             },
-        });
 
+            mounted() {
+                this.loadFavorites();
+            }
+        });
         app.mount('#app');
     </script>
 </body>
+
 </html>
