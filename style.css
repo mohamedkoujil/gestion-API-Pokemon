@@ -6,6 +6,15 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+
+.alignself-right {
+    align-self: flex-end;
+}
+
+.margin05{
+    margin: 0.5em;
+}
+
 .margin025 {
     margin: 0.25em;
 }
@@ -26,10 +35,25 @@
     align-items: center;
 }
 
+.img-pokemon {
+    width: 8em;
+}
+
+.fav-img {
+    background-color: rgb(88, 88, 204);
+    color: white;
+    border: none;
+    border-radius:5px;
+    cursor: pointer;
+    width: 2em;
+    height: 3em;
+    margin: 0.75em 0.25em 0 0;
+    padding: 0.15em;
+}
+
 .pokemonCard {
-    min-width: 8em;
-    max-width: 8em;
-    max-height: 9em;
+    width: 9em;
+    max-height: 12em;
     background-color: rgb(245, 208, 0);
     border: rgb(88, 88, 204) 5px solid;
     border-radius: 10px;
