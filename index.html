@@ -12,12 +12,13 @@
         <div id="app">
             Busqueda
             <form v-on:submit.prevent="verPokemon">
-                <input id="inputUsr" v-model="pokemon" type="text">
+                <input id="inputUsr" v-model="pokemon" type="text" required>
                 <input type="submit" value="imprimir">
             </form>
             <div class="pokemonCard flexColumn center verdanaFont" v-show="ok" id="datos">
-                <button @click="addFav">+</button>
-                <img class="margin025" :src="pokemonData?.sprites?.front_default">
+                <img v-if="isInFavorites(pokemonData)" class="margin05 alignself-right fav-img" @click="toggleFavorite(pokemonData)" src="images/fav.png"></img>
+                <img v-else class="alignself-right fav-img" @click="addFav" src="images/no-fav.png"></img>
+                <img class="img-pokemon" :src="pokemonData?.sprites?.front_default">
                 <div class="title">{{ pokemonData.name }}</div class="title">
                 <div v-show = "masInfo">
                     <div v-for="type in pokemonData.types">
@@ -30,14 +31,14 @@
                         <div class="margin025">{{ stat.stat.name }}: {{ stat.base_stat }}</div>
                     </div>
                 </div>
-                
             </div>
             <div v-if="pokemonNoEncontrado">No se ha encontrado el pokemon</div>
 
             <div class="flex">
                 <div v-for="fav in favoritos" :key="fav">
-                    <div class="pokemonCard flexColumn center verdanaFont" @mouseenter="mostrarMasInfo" @mouseleave="mostrarMasInfo">
-                        <img :src="fav.sprites.front_default">
+                    <div class="pokemonCard flexColumn center verdanaFont">
+                        <img class="alignself-right fav-img" @click="toggleFavorite(fav)" src="images/fav.png"></img>
+                        <img class="img-pokemon" :src="fav?.sprites?.front_default">
                         <div class="title">{{ fav.name }}</div class="title">
                         <div v-show="masInfo" >
                             <div v-for="type in fav.types">
@@ -101,17 +102,25 @@
                         });
                 },
 
-                mostrarMasInfo() {
-                    console.log('hola');
-                    this.masInfo = !this.masInfo;
+                toggleFavorite(pokemon) {
+                    if (this.isInFavorites(pokemon)) {
+                        this.removeFav(pokemon);
+                    } else {
+                        this.addFav();
+                    }
                 },
 
                 addFav() {
-                    const pokemonName = this.pokemonData.name;
-                    if (!this.favoritos.some(fav => fav.name === pokemonName)) {
+                    let pokemonName = this.pokemonData.name;
+                    if (!this.favoritos.some(fav => fav.name == pokemonName)) {
                         this.favoritos.push(this.pokemonData);
                         localStorage.setItem('favorites', JSON.stringify(this.favoritos));
                     }
+                },
+
+                removeFav(pokemon) {
+                    this.favoritos = this.favoritos.filter(fav => fav.name != pokemon.name);
+                    localStorage.setItem('favorites', JSON.stringify(this.favoritos));
                 },
 
                 loadFavorites() {
@@ -119,6 +128,10 @@
                     if (favorites) {
                         this.favoritos = JSON.parse(favorites);
                     }
+                },
+
+                isInFavorites(pokemon) {
+                    return this.favoritos.some(fav => fav.name == pokemon.name);
                 }
             },
 
