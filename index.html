@@ -10,11 +10,13 @@
 <body>
     <main>
         <div id="app">
-            Busqueda
-            <form v-on:submit.prevent="verPokemon">
-                <input id="inputUsr" v-model="pokemon" type="text" required>
-                <input type="submit" value="imprimir">
-            </form>
+            <div class="form-container center flex"  @mouseleave="formDeployed = false">
+                <form v-if="formDeployed" class="center" v-on:submit.prevent="verPokemon">
+                    <input id="inputUsr" v-model="pokemon" type="text" placeholder="Ej. Charmander" required>
+                </form>
+                <img class="serach alignself-center" src="images/lupa.png" @click="clickLupa"></img>
+            </div>
+
             <div class="pokemonCard flexColumn center verdanaFont" v-show="ok" id="datos">
                 <img v-if="isInFavorites(pokemonData)" class="margin05 alignself-right fav-img" @click="toggleFavorite(pokemonData)" src="images/fav.png"></img>
                 <img v-else class="alignself-right fav-img" @click="addFav" src="images/no-fav.png"></img>
@@ -34,6 +36,31 @@
             </div>
             <div v-if="pokemonNoEncontrado">No se ha encontrado el pokemon</div>
 
+            <div class="flex">
+                <div v-for="pokemon in allPokemon" :key="pokemon">
+                    <div class="pokemonCard flexColumn center verdanaFont">
+                        <img class="alignself-right fav-img" @click="toggleFavorite(pokemon)" src="images/fav.png"></img>
+                        <img class="img-pokemon" :src="pokemon?.sprites?.front_default">
+                        <div class="title">{{ pokemon.name }}</div class="title">
+                        <div v-show="masInfo" >
+                            <div v-for="type in pokemon.types">
+                                <div class="margin025">{{ type.type.name }}</div>
+                            </div>
+                            <div v-for="ability in pokemon.abilities">
+                                <div class="margin025">{{ ability.ability.name }}</div>
+                            </div>
+                            <div v-for="stat in pokemon.stats">
+                                <div class="margin025">{{ stat.stat.name }}: {{ stat.base_stat }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <h2>Favoritos</h2>
+            
             <div class="flex">
                 <div v-for="fav in favoritos" :key="fav">
                     <div class="pokemonCard flexColumn center verdanaFont">
@@ -55,12 +82,13 @@
                     </div>
                 </div>
             </div>
+            
 
         </div>
     </main>
 
     <script>
-        const apiLink = 'https://pokeapi.co/api/v2/pokemon/'
+        const apiLink = 'https://pokeapi.co/api/v2/'
 
         const app = Vue.createApp({
             data() {
@@ -71,13 +99,18 @@
                     showImg: false,
                     pokemonNoEncontrado: false,
                     favoritos: [],
-                    masInfo: false
+                    masInfo: false,
+                    formDeployed: false,
+                    allPokemon: []
                 };
             },
 
             methods: {
                 verPokemon() {
-                    this.conectaApi(this.pokemon);
+                    if (this.pokemon == '') {
+                        return;
+                    }
+                    this.conectaApi("pokemon/"+this.pokemon.toLowerCase());
                 },
 
                 conectaApi(pokemon) {
@@ -132,11 +165,41 @@
 
                 isInFavorites(pokemon) {
                     return this.favoritos.some(fav => fav.name == pokemon.name);
+                },
+
+                clickLupa() {
+                    if(!this.formDeployed){
+                        this.formDeployed = true;
+                        return;
+                    }
+                    this.verPokemon();
+                },
+
+                loadAllPokemon() {
+                    console.log(apiLink + "pokemon?limit=100000&offset=0");
+                    fetch(apiLink + "pokemon?limit=100000&offset=0")
+                        .then((res) => {
+                            if (res.ok) {
+                                return res.json();
+                            } else {
+                                this.ok = false;
+                                this.pokemonNoEncontrado = true;
+                                throw new Error('Error en la llamada a la API');
+                            }
+                        })
+                        .then((js) => {
+                            this.allPokemon = js;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                        });
+                        console.log(this.allPokemon);
                 }
             },
 
             mounted() {
                 this.loadFavorites();
+                this.loadAllPokemon() ;
             }
         });
         app.mount('#app');
