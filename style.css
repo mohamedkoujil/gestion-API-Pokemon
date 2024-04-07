@@ -10,6 +10,10 @@ body {
     align-self: flex-end;
 }
 
+.alignself-left {
+    align-self: flex-start;
+}
+
 .alignself-center {
     align-self: center;
 }
@@ -37,6 +41,10 @@ body {
     margin-bottom: 0.75em;
 }
 
+.wrap {
+    flex-wrap: wrap;
+}
+
 .center {
     justify-content: center;
     align-items: center;
@@ -51,13 +59,12 @@ body {
     border-radius: 5px;
     cursor: pointer;
     width: 2.4em;
-    height: 3em;
     margin: 0;
 }
 
 .pokemonCard {
     width: 9em;
-    max-height: 12em;
+    height: 12.5em;
     background-color: rgb(255, 219, 88); /* Amarillo claro */
     border: rgb(112, 128, 250) 5px solid; /* Azul claro */
     border-radius: 10px;
@@ -78,7 +85,9 @@ body {
 .form-container {
     width: fit-content;
     margin: auto;
-    padding: 1em;
+    padding: 6em;
+    margin: -5em;
+    border: rgb(112, 128, 250) 5px solid;
 }
 
 
@@ -97,7 +106,27 @@ form input:focus {
     border: 5px solid rgb(112, 128, 250);
 }
 
+#masInfo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255, 219, 88);
+    border: rgb(112, 128, 250) 5px solid;
+    border-radius: 10px;
+    width: 15em;
+    height: 20em;
+}
 
+.buttonInfo {
+    background-color: rgb(112, 128, 250);
+    border: none;
+    color: white;
+    padding: 0.5em;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0.5em;
+}
 
 
 

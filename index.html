@@ -9,20 +9,21 @@
 
 <body>
     <main>
-        <div id="app">
-            <div class="form-container center flex"  @mouseleave="formDeployed = false">
+        <div class="flex flexColumn center" id="app">
+            <div class="form-container center flex" @mouseleave="formDeployed = false">
                 <form v-if="formDeployed" class="center" v-on:submit.prevent="verPokemon">
                     <input id="inputUsr" v-model="pokemon" type="text" placeholder="Ej. Charmander" required>
                 </form>
                 <img class="serach alignself-center" src="images/lupa.png" @click="clickLupa"></img>
             </div>
 
-            <div class="pokemonCard flexColumn center verdanaFont" v-show="ok" id="datos">
-                <img v-if="isInFavorites(pokemonData)" class="margin05 alignself-right fav-img" @click="toggleFavorite(pokemonData)" src="images/fav.png"></img>
+            <div class="pokemonCard flexColumn alignself-left verdanaFont" v-show="ok" id="datos">
+                <img v-if="isInFavorites(pokemonData)" class="margin05 alignself-right fav-img"
+                    @click="toggleFavorite(pokemonData)" src="images/fav.png"></img>
                 <img v-else class="alignself-right fav-img" @click="addFav" src="images/no-fav.png"></img>
-                <img class="img-pokemon" :src="pokemonData?.sprites?.front_default">
+                <img class="img-pokemon" :src="imgLink(pokemonData)">
                 <div class="title">{{ pokemonData.name }}</div class="title">
-                <div v-show = "masInfo">
+                <div class="flex center" v-show="masInfo" id="masInfo">
                     <div v-for="type in pokemonData.types">
                         <div class="margin025">{{ type.type.name }}</div>
                     </div>
@@ -36,6 +37,7 @@
             </div>
             <div v-if="pokemonNoEncontrado">No se ha encontrado el pokemon</div>
 
+            <!--
             <div class="flex">
                 <div v-for="pokemon in allPokemon" :key="pokemon">
                     <div class="pokemonCard flexColumn center verdanaFont">
@@ -56,18 +58,18 @@
                     </div>
                 </div>
             </div>
+            -->
 
 
-
-            <h2>Favoritos</h2>
-            
-            <div class="flex">
-                <div v-for="fav in favoritos" :key="fav">
+            <h2 class="alignself-left">Favoritos</h2>
+            <div class="alignself-left" v-if="favoritos.length == 0">No tienes favoritos</div>
+            <div v-else class="flex wrap alignself-left">
+                <div class="flex" v-for="fav in favoritos" :key="fav">
                     <div class="pokemonCard flexColumn center verdanaFont">
                         <img class="alignself-right fav-img" @click="toggleFavorite(fav)" src="images/fav.png"></img>
-                        <img class="img-pokemon" :src="fav?.sprites?.front_default">
+                        <img class="img-pokemon" :src="imgLink(fav)">
                         <div class="title">{{ fav.name }}</div class="title">
-                        <div v-show="masInfo" >
+                        <div class="flex center flexColumn" v-show="masInfo" id="masInfo">
                             <div v-for="type in fav.types">
                                 <div class="margin025">{{ type.type.name }}</div>
                             </div>
@@ -77,12 +79,13 @@
                             <div v-for="stat in fav.stats">
                                 <div class="margin025">{{ stat.stat.name }}: {{ stat.base_stat }}</div>
                             </div>
+                            <button class="buttonInfo" @click="masInfo = !masInfo">Cerrar</button>
                         </div>
-                        
                     </div>
                 </div>
+
             </div>
-            
+
 
         </div>
     </main>
@@ -110,7 +113,7 @@
                     if (this.pokemon == '') {
                         return;
                     }
-                    this.conectaApi("pokemon/"+this.pokemon.toLowerCase());
+                    this.conectaApi("pokemon/" + this.pokemon.toLowerCase());
                 },
 
                 conectaApi(pokemon) {
@@ -125,6 +128,7 @@
                             }
                         })
                         .then((js) => {
+                            console.log(js);
                             this.pokemonData = js;
                             this.showImg = true;
                             this.ok = true;
@@ -133,6 +137,18 @@
                         .catch(error => {
                             console.error('Error fetching data:', error);
                         });
+                },
+
+                imgLink(pokemon) {
+                    const id = pokemon.id;
+                    switch (true) {
+                        case id < 10:
+                            return "https://assets.pokemon.com/assets/cms2/img/pokedex/full/00" + id + ".png";
+                        case id < 100:
+                            return "https://assets.pokemon.com/assets/cms2/img/pokedex/full/0" + id + ".png";
+                        default:
+                            return "https://assets.pokemon.com/assets/cms2/img/pokedex/full/" + id + ".png";
+                    }
                 },
 
                 toggleFavorite(pokemon) {
@@ -168,7 +184,7 @@
                 },
 
                 clickLupa() {
-                    if(!this.formDeployed){
+                    if (!this.formDeployed) {
                         this.formDeployed = true;
                         return;
                     }
@@ -193,13 +209,13 @@
                         .catch(error => {
                             console.error('Error fetching data:', error);
                         });
-                        console.log(this.allPokemon);
+                    console.log(this.allPokemon);
                 }
             },
 
             mounted() {
                 this.loadFavorites();
-                this.loadAllPokemon() ;
+                this.loadAllPokemon();
             }
         });
         app.mount('#app');
