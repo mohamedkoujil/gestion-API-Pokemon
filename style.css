@@ -31,6 +31,10 @@ body {
     flex-direction: column;
 }
 
+.flexStart {
+    justify-content: flex-start;
+}
+
 .flex {
     display: flex;
 }
@@ -64,7 +68,6 @@ body {
 
 .pokemonCard {
     width: 9em;
-    height: 12.5em;
     background-color: rgb(255, 219, 88); /* Amarillo claro */
     border: rgb(112, 128, 250) 5px solid; /* Azul claro */
     border-radius: 10px;
@@ -73,13 +76,13 @@ body {
 }
 
 .serach {
-    width: 5.5em;
+    width: 3.5em;
     transition: 0.3s;
     cursor: pointer;
 }
 
 .serach:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 .form-container {
@@ -106,15 +109,10 @@ form input:focus {
 }
 
 #masInfo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgb(255, 219, 88);
-    border: rgb(112, 128, 250) 5px solid;
+    border: rgb(112, 128, 250) 3px solid;
+    background-color: #f7efab85;
     border-radius: 10px;
-    width: 15em;
-    height: 20em;
+    width: 95%;
 }
 
 .buttonInfo {

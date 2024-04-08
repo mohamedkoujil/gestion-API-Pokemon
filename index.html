@@ -10,11 +10,13 @@
 <body>
     <main>
         <div class="flex flexColumn center" id="app">
-            <div class="form-container center flex" @mouseleave="formDeployed = false">
-                <form v-if="formDeployed" class="center" v-on:submit.prevent="verPokemon">
+            <div class="form-container center flex">
+                <form class="center" v-on:submit.prevent="verPokemon">
                     <input id="inputUsr" v-model="pokemon" type="text" placeholder="Ej. Charmander" required>
                 </form>
                 <img class="serach alignself-center" src="images/lupa.png" @click="clickLupa"></img>
+                <button v-if="!masInfo" class="buttonInfo" @click="masInfo = !masInfo">Mas info</button>
+                <button v-else class="buttonInfo" @click="masInfo = !masInfo" style="background-color: rgb(186, 224, 255); color: black;">Mas info</button>
             </div>
 
             <div class="pokemonCard flexColumn center alignself-left verdanaFont" v-show="ok" id="datos">
@@ -23,7 +25,7 @@
                 <img v-else class="alignself-right fav-img" @click="addFav" src="images/no-fav.png"></img>
                 <img class="img-pokemon" :src="imgLink(pokemonData)">
                 <div class="title">{{ pokemonData.name }}</div class="title">
-                <div class="flex center" v-show="masInfo" id="masInfo">
+                <div class="flex flexStart flexColumn" v-show="masInfo" id="masInfo">
                     <div v-for="type in pokemonData.types">
                         <div class="margin025">{{ type.type.name }}</div>
                     </div>
@@ -69,7 +71,7 @@
                         <img class="alignself-right fav-img" @click="toggleFavorite(fav)" src="images/fav.png"></img>
                         <img class="img-pokemon" :src="imgLink(fav)">
                         <div class="title">{{ fav.name }}</div class="title">
-                        <div class="flex center flexColumn" v-show="masInfo" id="masInfo">
+                        <div class="flex flexStart flexColumn" v-show="masInfo" id="masInfo">
                             <div v-for="type in fav.types">
                                 <div class="margin025">{{ type.type.name }}</div>
                             </div>
@@ -79,7 +81,6 @@
                             <div v-for="stat in fav.stats">
                                 <div class="margin025">{{ stat.stat.name }}: {{ stat.base_stat }}</div>
                             </div>
-                            <button class="buttonInfo" @click="masInfo = !masInfo">Cerrar</button>
                         </div>
                     </div>
                 </div>
@@ -103,7 +104,6 @@
                     pokemonNoEncontrado: false,
                     favoritos: [],
                     masInfo: false,
-                    formDeployed: false,
                     allPokemon: []
                 };
             },
@@ -184,10 +184,6 @@
                 },
 
                 clickLupa() {
-                    if (!this.formDeployed) {
-                        this.formDeployed = true;
-                        return;
-                    }
                     this.verPokemon();
                 },
 
