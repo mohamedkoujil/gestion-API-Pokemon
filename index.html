@@ -4,7 +4,7 @@
 <head>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link rel="stylesheet" href="style.css">
-    <title>Primera página con Vue</title>
+    <title>Pokemon API</title>
 </head>
 
 <body>
@@ -17,7 +17,7 @@
                 <img class="serach alignself-center" src="images/lupa.png" @click="clickLupa"></img>
             </div>
 
-            <div class="pokemonCard flexColumn alignself-left verdanaFont" v-show="ok" id="datos">
+            <div class="pokemonCard flexColumn center alignself-left verdanaFont" v-show="ok" id="datos">
                 <img v-if="isInFavorites(pokemonData)" class="margin05 alignself-right fav-img"
                     @click="toggleFavorite(pokemonData)" src="images/fav.png"></img>
                 <img v-else class="alignself-right fav-img" @click="addFav" src="images/no-fav.png"></img>
